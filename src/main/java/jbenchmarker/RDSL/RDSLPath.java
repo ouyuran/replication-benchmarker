@@ -1,32 +1,57 @@
 package jbenchmarker.RDSL;
 
+import jbenchmarker.rga.RGAMerge;
+import jbenchmarker.rga.RGANode;
+
 import java.util.ArrayList;
 
-public class RDSLPath {
-    private ArrayList<RDSLFootPrint>[] levels;
+public class RDSLPath<T extends RDSLWalkable> {
+    private ArrayList<RDSLFootPrint<RDSLNode<T>>>[] levels;
+    private ArrayList<RDSLFootPrint<T>> level0;
     public static final int MAX_LEVEL = 255;
-    private int dataNodesTotalDistance = 0;
 
-    public RDSLPath() {
-        this.levels = new ArrayList[MAX_LEVEL];
-        for(int i = 0; i < MAX_LEVEL; i++) {
-            levels[i] = new ArrayList<RDSLFootPrint>();
+    public RDSLPath(int totalLevels) {
+        this.levels = new ArrayList[totalLevels];
+        for(int i = 0; i < totalLevels; i++) {
+            levels[i] = new ArrayList<RDSLFootPrint<RDSLNode<T>>>();
         }
+        level0 = new ArrayList<RDSLFootPrint<T>>();
     }
 
-    public void add(RDSLFootPrint footPrint) {
-        this.levels[footPrint.getLevel()].add(footPrint);
+    public void add(RDSLFootPrint<RDSLNode<T>> footPrint) {
+        this.levels[footPrint.getLevel() - 1].add(footPrint);
     }
 
-    public void setDataNodesTotalDistance(int d) {
-        this.dataNodesTotalDistance = d;
+    public void addLevel0(RDSLFootPrint<T> footPrint) {
+        this.level0.add(footPrint);
     }
+
     private int sumDistances(int level) {
+        // ---a--------x=3+c.getDistance()+d.getDistance() (b should not be counted)
+        //    |        |
+        //    b--c--d--3(still 3, e should not be counted)
+        //          |  |
+        //          e--3(fgh)
+        //          |  |
+        //          fghi
+        // the path for x is
+        // [a]
+        // [b, c, d]
+        // [e]
+        // [f, g, h]
+        // this first skip item for each level (a, b, e) should not be counted
+        // while first data item should be counted
         int totalDistance = 0;
-        ArrayList<RDSLFootPrint> footPrints = this.levels[level];
-        // first footprint should not be counted
-        for(int i = 1; i < footPrints.size(); i++) {
-            totalDistance += footPrints.get(i).getDistance();
+        if(level > 0) {
+            ArrayList<RDSLFootPrint<RDSLNode<T>>> footPrints = this.levels[level - 1];
+            for(int i = 1; i < footPrints.size(); i++) {
+                totalDistance += footPrints.get(i).getDistance();
+            }
+        } else {
+            ArrayList<RDSLFootPrint<T>> footPrints = this.level0;
+            for(int i = 0; i < footPrints.size(); i++) {
+                totalDistance += footPrints.get(i).getDistance();
+            }
         }
         return totalDistance;
     }
@@ -37,6 +62,19 @@ public class RDSLPath {
             total += this.sumDistances(level);
             level --;
         }
-        return total + this.dataNodesTotalDistance;
+        return total;
+    }
+
+    public RDSLFootPrint getLastFootPrintOfLevel(int level) {
+        if(level > 0) {
+            ArrayList<RDSLFootPrint<RDSLNode<T>>> list = this.levels[level - 1];
+            return list.get(list.size() - 1);
+        } else {
+            return this.level0.get(this.level0.size() - 1);
+        }
+    }
+    public T getLastDataNode() {
+        RDSLFootPrint<T> f = getLastFootPrintOfLevel(0);
+        return f.getNode();
     }
 }

@@ -1,10 +1,10 @@
 package jbenchmarker.RDSL;
 
-public class RDSLFootPrint {
-    private RDSLNode node;
+public class RDSLFootPrint<T extends RDSLWalkable> {
+    private T node;
     private int level;
 
-    public RDSLFootPrint(RDSLNode node, int level) {
+    public RDSLFootPrint(T node, int level) {
         this.node = node;
         this.level = level;
     }
@@ -15,5 +15,9 @@ public class RDSLFootPrint {
 
     public int getDistance() {
         return this.node.getDistance(this.level);
+    }
+
+    public T getNode() {
+        return this.node;
     }
 }

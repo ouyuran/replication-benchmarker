@@ -34,7 +34,7 @@ import jbenchmarker.core.SequenceOperation;
  */
 public class RGAMerge extends MergeAlgorithm {
 
-    private VectorClock siteVC;
+    protected VectorClock siteVC;
 //	private RGAPurger	purger;
 
     public RGAMerge(Document doc, int r) {

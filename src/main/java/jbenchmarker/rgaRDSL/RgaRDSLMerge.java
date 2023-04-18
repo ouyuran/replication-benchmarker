@@ -2,6 +2,8 @@ package jbenchmarker.rgaRDSL;
 
 import crdt.Operation;
 import crdt.simulator.IncorrectTraceException;
+import jbenchmarker.RDSL.RDSLNode;
+import jbenchmarker.RDSL.RDSLPath;
 import jbenchmarker.core.Document;
 import jbenchmarker.core.SequenceOperation;
 import jbenchmarker.rga.*;
@@ -17,7 +19,7 @@ public class RgaRDSLMerge extends RGAMerge {
     @Override
     protected List<Operation> localInsert(SequenceOperation opt) throws IncorrectTraceException {
         List<Operation> lop = new ArrayList<Operation>();
-        RGADocument rgadoc = (RGADocument) (this.getDoc());
+        RgaRDSLDocument rgadoc = (RgaRDSLDocument) (this.getDoc());
         RGAS4Vector s4vtms, s4vpos = null;
         RgaRDSLOperation rgaop;
         RGANode target = null;
@@ -26,20 +28,15 @@ public class RgaRDSLMerge extends RGAMerge {
         int offset;
 
         offset = opt.getContent().size();
-        if (p == 0) {
-            s4vpos = null;
-        } else {
-            s4vpos = rgadoc.getVisibleS4V(p); // if head, s4vpos = null; if after tail, s4vpos= the last one.
-        }
+        RDSLPath<RGANode> path = new RDSLPath<>(rgadoc.startLevel());
+        s4vpos = rgadoc.getVisibleS4V(p, path); // if head, s4vpos = null; if after tail, s4vpos= the last one.
         for (int i = 0; i < offset; i++) {
             this.siteVC.inc(this.getReplicaNumber());
             s4vtms = new RGAS4Vector(this.getReplicaNumber(), this.siteVC);
-            //todo to add path to operation
-            rgaop = new RgaRDSLOperation(p + i, s4vpos, opt.getContent().get(i), s4vtms);
+            rgaop = new RgaRDSLOperation(p + i, s4vpos, opt.getContent().get(i), s4vtms, path);
             s4vpos = s4vtms; // The s4v of the current insert becomes the s4vpos of next insert.
             lop.add(rgaop);
             rgadoc.apply(rgaop);
-
 //			purger.setLastVC(this.getReplicaNumber(),this.siteVC);
         }
 

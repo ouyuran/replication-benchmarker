@@ -155,6 +155,10 @@ public class RGADocument<T> implements Document {
         return node;
     }
 
+    public RGANode getHead() {
+        return this.head;
+    }
+
     @Override
     public int viewLength() {
         return size;

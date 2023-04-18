@@ -1,7 +1,8 @@
 package jbenchmarker.RDSL;
 
-public class RDSLWalker<T> {
+public class RDSLWalker<T extends RDSLWalkable> {
     private RDSLNode<T> currentNode;
+    private T dataNode;
     private int posLeft;
     private RDSLPath path;
     private int currentLevel;
@@ -10,12 +11,26 @@ public class RDSLWalker<T> {
         this.currentNode = start;
         this.posLeft = pos;
         this.currentLevel = level;
-        this.path = new RDSLPath();
+        this.path = new RDSLPath(level);
         this.addCurrentFootPrint();
+        this.dataNode = null;
+    }
+
+    public RDSLWalker(RDSLNode start, int pos, int level, RDSLPath<T> path) {
+        this.currentNode = start;
+        this.posLeft = pos;
+        this.currentLevel = level;
+        this.path = path;
+        this.addCurrentFootPrint();
+        this.dataNode = null;
     }
 
     private void addCurrentFootPrint() {
-        this.path.add(new RDSLFootPrint(this.currentNode, this.currentLevel));
+        if(this.currentLevel > 0) {
+            this.path.add(new RDSLFootPrint(this.currentNode, this.currentLevel));
+        } else {
+            this.path.add(new RDSLFootPrint(this.dataNode, 0));
+        }
     }
 
     public boolean shouldGoRight() {
@@ -23,13 +38,24 @@ public class RDSLWalker<T> {
         return this.posLeft > this.currentNode.getRightDistance(this.currentLevel);
     }
     public void goRight() {
-        this.posLeft -= this.currentNode.getRightDistance(this.currentLevel);
-        this.currentNode = this.currentNode.getRight(this.currentLevel);
+        if(this.currentLevel > 0) {
+            RDSLNode right = this.currentNode.getRight(this.currentLevel);
+            this.posLeft -= right.getDistance(this.currentLevel);
+            this.currentNode = right;
+        } else {
+            T right = (T) this.dataNode.getRight(0);
+            this.posLeft -= right.getDistance(0);
+            this.dataNode = right;
+        }
         this.addCurrentFootPrint();
     }
 
     public void goDown() {
         this.currentLevel --;
+        if(this.currentLevel == 0) {
+            this.dataNode = this.currentNode.getDataNode();
+            this.posLeft -= this.dataNode.getDistance(0);
+        }
         this.addCurrentFootPrint();
     }
 
@@ -38,11 +64,7 @@ public class RDSLWalker<T> {
     }
 
     public boolean finish() {
-        return this.currentLevel == 0 && (
-                this.currentNode.getRight(this.currentLevel) == null ||
-                        //todo
-                        this.currentNode.getRightDistance(this.currentLevel) == 0
-        );
+        return this.posLeft == 0 && this.currentLevel == 0;
     }
 
     public T getCurrentDataNode() {

@@ -18,13 +18,15 @@
  */
 package jbenchmarker.rga;
 
+import jbenchmarker.RDSL.RDSLWalkable;
+
 import java.io.Serializable;
 
 /**
  *
  * @author Roh
  */
-public class RGANode<T> implements Serializable {
+public class RGANode<T> implements Serializable, RDSLWalkable {
 
     private RGAS4Vector key;
     private RGAS4Vector tomb;	//used for visible and tombstone purging if null, then not tombstone 		 
@@ -103,5 +105,13 @@ public class RGANode<T> implements Serializable {
         int hash = 3;
         hash = 89 * hash + (this.key != null ? this.key.hashCode() : 0);
         return hash;
+    }
+
+    public int getDistance(int level) {
+        return this.tomb == null ? 1 : 0;
+    }
+
+    public RGANode getRight(int level) {
+        return this.next;
     }
 }
