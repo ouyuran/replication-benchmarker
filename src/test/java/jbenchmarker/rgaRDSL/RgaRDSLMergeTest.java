@@ -69,6 +69,41 @@ public class RgaRDSLMergeTest {
     }
 
     @Test
+    public void frontInsert() throws PreconditionException {
+        replica.applyLocal(SequenceOperation.insert(0, "a"));
+        replica.applyLocal(SequenceOperation.insert(0, "b"));
+        replica.applyLocal(SequenceOperation.insert(0, "c"));
+        replica.applyLocal(SequenceOperation.insert(0, "d"));
+        replica.applyLocal(SequenceOperation.insert(0, "e"));
+        replica.applyLocal(SequenceOperation.insert(0, "f"));
+        replica.applyLocal(SequenceOperation.insert(0, "g"));
+        assertEquals("gfedcba", replica.lookup());
+    }
+
+    @Test
+    public void randomInsert() throws PreconditionException {
+        replica.applyLocal(SequenceOperation.insert(0, "a"));
+        replica.applyLocal(SequenceOperation.insert(1, "b"));
+        replica.applyLocal(SequenceOperation.insert(2, "c"));
+        replica.applyLocal(SequenceOperation.insert(3, "d"));
+        replica.applyLocal(SequenceOperation.insert(1, "x"));
+        replica.applyLocal(SequenceOperation.insert(0, "y"));
+        assertEquals("yaxbcd", replica.lookup());
+    }
+
+    @Test
+    public void randomInsert100() throws PreconditionException {
+        RGAMerge replicaRGA = (RGAMerge) new RGAFactory().create(REPLICA_ID);
+        for(int i = 0; i < 100; i++) {
+            int pos = (int) (Math.random() * (i + 1));
+            String s = "" + (char) ('a' + pos % 26);
+            replica.applyLocal(SequenceOperation.insert(pos, s));
+            replicaRGA.applyLocal(SequenceOperation.insert(pos, s));
+        }
+        assertEquals(replicaRGA.lookup(), replica.lookup());
+    }
+
+    @Test
     public void testInsert() throws PreconditionException {
         String content = "abcdejk", c2 = "fghi";
         int pos = 3;
