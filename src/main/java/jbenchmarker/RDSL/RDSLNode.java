@@ -7,7 +7,7 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
     private RDSLNode[] references;
     private int[] distances;
 
-    private static final double p = 1.0 / 4;
+    private static final double p = 1.0 / 2;
 
     public RDSLNode(T dataNode, int level) {
         this.dataNode = dataNode;
@@ -17,6 +17,10 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
 
     public RDSLNode getRight(int level) {
         return this.references[level - 1];
+    }
+
+    public void setRight(int level, RDSLNode<T> right) {
+        this.references[level - 1] = right;
     }
 
     public int getDistance(int level) {

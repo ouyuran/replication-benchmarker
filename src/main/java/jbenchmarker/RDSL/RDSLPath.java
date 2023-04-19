@@ -8,9 +8,12 @@ import java.util.ArrayList;
 public class RDSLPath<T extends RDSLWalkable> {
     private ArrayList<RDSLFootPrint<RDSLNode<T>>>[] levels;
     private ArrayList<RDSLFootPrint<T>> level0;
-    public static final int MAX_LEVEL = 255;
+    public static final int MAX_LEVEL = 32;
+
+    private int totalLevels;
 
     public RDSLPath(int totalLevels) {
+        this.totalLevels = totalLevels;
         this.levels = new ArrayList[totalLevels];
         for(int i = 0; i < totalLevels; i++) {
             levels[i] = new ArrayList<RDSLFootPrint<RDSLNode<T>>>();
@@ -42,21 +45,25 @@ public class RDSLPath<T extends RDSLWalkable> {
         // this first skip item for each level (a, b, e) should not be counted
         // while first data item should be counted
         int totalDistance = 0;
-        if(level > 0) {
-            ArrayList<RDSLFootPrint<RDSLNode<T>>> footPrints = this.levels[level - 1];
-            for(int i = 1; i < footPrints.size(); i++) {
-                totalDistance += footPrints.get(i).getDistance();
-            }
-        } else {
-            ArrayList<RDSLFootPrint<T>> footPrints = this.level0;
-            for(int i = 0; i < footPrints.size(); i++) {
-                totalDistance += footPrints.get(i).getDistance();
+        if(level < this.totalLevels) {
+            if(level > 0) {
+                ArrayList<RDSLFootPrint<RDSLNode<T>>> footPrints = this.levels[level - 1];
+                for(int i = 1; i < footPrints.size(); i++) {
+                    totalDistance += footPrints.get(i).getDistance();
+                }
+            } else {
+                ArrayList<RDSLFootPrint<T>> footPrints = this.level0;
+                for(int i = 0; i < footPrints.size(); i++) {
+                    totalDistance += footPrints.get(i).getDistance();
+                }
             }
         }
         return totalDistance;
     }
 
     public int getDistance(int level) {
+        // should count from level - 1 to 0
+        level--;
         int total = 0;
         while(level >= 0) {
             total += this.sumDistances(level);
@@ -66,6 +73,7 @@ public class RDSLPath<T extends RDSLWalkable> {
     }
 
     public RDSLFootPrint getLastFootPrintOfLevel(int level) {
+        if(level > this.totalLevels) return null;
         if(level > 0) {
             ArrayList<RDSLFootPrint<RDSLNode<T>>> list = this.levels[level - 1];
             return list.get(list.size() - 1);

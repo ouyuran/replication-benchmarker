@@ -14,13 +14,13 @@ import jbenchmarker.rga.RGAS4Vector;
 import java.util.NoSuchElementException;
 
 public class RgaRDSLDocument extends RGADocument {
-    private RDSLNode<RGANode> rdslHead = new RDSLNode<RGANode>(null, RDSLPath.MAX_LEVEL);
-//    private RGANode dataHead = null
+    private RDSLNode<RGANode> rdslHead;
     private int numberOfRgaNodes = 0;
     private int maxLevel = 0;
 
     public RgaRDSLDocument() {
         super();
+        this.rdslHead = new RDSLNode<>(this.getHead(), RDSLPath.MAX_LEVEL);
     }
 
     public RGANode getVisibleNode(int v, RDSLPath<RGANode> path) {
@@ -83,29 +83,45 @@ public class RgaRDSLDocument extends RGADocument {
         // update RDSL
         int level = RDSLNode.getRandomLevel();
         RDSLNode<RGANode> rdslNode = null;
-        if(level > 0) rdslNode = new RDSLNode<RGANode>(newnd, level);
-        for(int l = 1; l <= rgadoc.getMaxLevel(); l++) {
+        if(level > 0) {
+            rdslNode = new RDSLNode<RGANode>(newnd, level);
+            this.updateMaxLevel(level);
+        }
+        System.out.println(String.format("# %s, level %d", newnd.getContent(), level));
+        for(int l = 1; l <= this.getMaxLevel(); l++) {
+            RDSLFootPrint leftFp = op.getPath().getLastFootPrintOfLevel(l);
+            RDSLNode left = leftFp != null ? (RDSLNode) leftFp.getNode() : this.rdslHead;
+            RDSLNode right = left.getRight(l);
             if(l <= level) {
+                left.setRight(l, rdslNode);
+                rdslNode.setRight(l, right);
                 rdslNode.updateDistance(l, op.getPath().getDistance(l));
-                rdslNode.updateRightDistance(l, newnd.getDistance(0) - rdslNode.getDistance(l));
+                System.out.println(String.format("Update self distance %s, level %d, delta %d", newnd.getContent(), l, op.getPath().getDistance(l)));
+                if(right != null) {
+                    right.updateDistance(l, newnd.getDistance(0) - rdslNode.getDistance(l));
+                    System.out.println(String.format("Update right distance %s, level %d, delta %d",
+                            ((RGANode) rdslNode.getRight(l).getDataNode()).getContent(), l, op.getPath().getDistance(l)));
+                }
             } else {
-                updateRdslHead(l, 1);
+                if(right != null) {
+                    right.updateDistance(l , 1);
+                }
             }
         }
-
+        op.getPath().addLevel0(new RDSLFootPrint(newnd, 0));
     }
 
     public  int getMaxLevel() {
         return this.maxLevel;
     }
     public int startLevel() {
-        return this.maxLevel;
+        return Math.max(this.maxLevel, 1);
 //        if(this.numberOfRgaNodes == 0) return 0;
 //        return (int) Math.floor(Math.log(this.numberOfRgaNodes) / Math.log(1 / p));
     }
 
     public void updateMaxLevel(int level) {
-        this.maxLevel = this.maxLevel > level ? this.maxLevel : level;
+        this.maxLevel = Math.max(this.maxLevel, level);
     }
 
     public void updateRdslHead(int level, int delta) {

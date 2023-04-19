@@ -46,6 +46,10 @@ public class RGANode<T> implements Serializable, RDSLWalkable {
         this.next = null;
     }
 
+    public boolean isHead() {
+        return this.key == null && this.content == null && this.tomb == null;
+    }
+
     public RGAS4Vector getKey() {
         return key;
     }
@@ -108,6 +112,7 @@ public class RGANode<T> implements Serializable, RDSLWalkable {
     }
 
     public int getDistance(int level) {
+        if(this.isHead()) return 0;
         return this.tomb == null ? 1 : 0;
     }
 

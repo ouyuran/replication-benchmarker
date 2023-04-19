@@ -30,9 +30,9 @@ import crdt.Operation;
  */
 public class RGADocument<T> implements Document {
 
-    private HashMap<RGAS4Vector, RGANode<T>> hash;
-    private RGANode head;
-    private int size = 0;
+    protected HashMap<RGAS4Vector, RGANode<T>> hash;
+    protected RGANode head;
+    protected int size = 0;
     //private RGAPurger	purger;
 
     public RGADocument() {
