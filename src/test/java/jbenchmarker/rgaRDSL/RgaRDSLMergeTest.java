@@ -50,35 +50,22 @@ public class RgaRDSLMergeTest {
 
     @Test
     public void testEndInsert() throws PreconditionException {
-        System.out.println("##################");
-        System.out.println("a");
-        System.out.println("##################");
         replica.applyLocal(SequenceOperation.insert(0, "a"));
-        System.out.println("##################");
-        System.out.println("b");
-        System.out.println("##################");
         replica.applyLocal(SequenceOperation.insert(1, "b"));
-        System.out.println("##################");
-        System.out.println("c");
-        System.out.println("##################");
         replica.applyLocal(SequenceOperation.insert(2, "c"));
-        System.out.println("##################");
-        System.out.println("d");
-        System.out.println("##################");
         replica.applyLocal(SequenceOperation.insert(3, "d"));
-        System.out.println("##################");
-        System.out.println("e");
-        System.out.println("##################");
         replica.applyLocal(SequenceOperation.insert(4, "e"));
-        System.out.println("##################");
-        System.out.println("f");
-        System.out.println("##################");
         replica.applyLocal(SequenceOperation.insert(5, "f"));
-        System.out.println("##################");
-        System.out.println("g");
-        System.out.println("##################");
         replica.applyLocal(SequenceOperation.insert(6, "g"));
-        assertEquals(replica.lookup(), "abcdefg");
+        assertEquals("abcdefg", replica.lookup());
+    }
+    @Test
+    public void testEndInsert26() throws PreconditionException {
+        for(int i = 0; i < 26; i++) {
+            String s = "" + (char) ('a' + i);
+            replica.applyLocal(SequenceOperation.insert(i, s));
+        }
+        assertEquals("abcdefghijklmnopqrstuvwxyz", replica.lookup());
     }
 
     @Test
