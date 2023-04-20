@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 public class RgaRDSLDocument extends RGADocument {
     private RDSLNode<RGANode> rdslHead;
     private int numberOfRgaNodes = 0;
-    private int maxLevel = 0;
+//    private int maxLevel = 0;
 
     public RgaRDSLDocument() {
         super();
@@ -79,7 +79,6 @@ public class RgaRDSLDocument extends RGADocument {
         RDSLNode<RGANode> rdslNode = null;
         if(level > 0) {
             rdslNode = new RDSLNode<RGANode>(newnd, level);
-            this.updateMaxLevel(level);
         }
         System.out.println(String.format("# %s, level %d", newnd.getContent(), level));
         for(int l = 1; l <= this.getMaxLevel(); l++) {
@@ -106,17 +105,17 @@ public class RgaRDSLDocument extends RGADocument {
     }
 
     public  int getMaxLevel() {
-        return this.maxLevel;
+        return this.rdslHead.getLevel();
     }
     public int startLevel() {
-        return Math.max(this.maxLevel, 1);
+        return Math.max(this.getMaxLevel(), 1);
 //        if(this.numberOfRgaNodes == 0) return 0;
 //        return (int) Math.floor(Math.log(this.numberOfRgaNodes) / Math.log(1 / p));
     }
 
-    public void updateMaxLevel(int level) {
-        this.maxLevel = Math.max(this.maxLevel, level);
-    }
+//    public void updateMaxLevel(int level) {
+//        this.maxLevel = Math.max(this.maxLevel, level);
+//    }
 
     public void updateRdslHead(int level, int delta) {
         this.rdslHead.updateRightDistance(level, delta);

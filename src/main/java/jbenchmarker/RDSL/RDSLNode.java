@@ -15,6 +15,16 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
         this.distances = new int[level];
     }
 
+    public int getLevel() {
+        // use to get current document level from RDSL head
+        // is not equal to self level
+        int level = 1;
+        while(this.getRight(level) != null && level <= RDSLPath.MAX_LEVEL) {
+            level++;
+        }
+        return level;
+    }
+
     public String getContentString() {
         return "";
     }
