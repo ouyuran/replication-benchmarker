@@ -58,6 +58,7 @@ public class RgaRDSLMergeTest {
         replica.applyLocal(SequenceOperation.insert(5, "f"));
         replica.applyLocal(SequenceOperation.insert(6, "g"));
         assertEquals("abcdefg", replica.lookup());
+        replica.print();
     }
     @Test
     public void testEndInsert26() throws PreconditionException {
@@ -66,6 +67,7 @@ public class RgaRDSLMergeTest {
             replica.applyLocal(SequenceOperation.insert(i, s));
         }
         assertEquals("abcdefghijklmnopqrstuvwxyz", replica.lookup());
+        replica.print();
     }
 
     @Test
@@ -97,8 +99,11 @@ public class RgaRDSLMergeTest {
         for(int i = 0; i < 100; i++) {
             int pos = (int) (Math.random() * (i + 1));
             String s = "" + (char) ('a' + pos % 26);
+            System.out.println(String.format("@@@@ insert %s at pos %d", s, pos));
             replica.applyLocal(SequenceOperation.insert(pos, s));
             replicaRGA.applyLocal(SequenceOperation.insert(pos, s));
+            replica.print();
+            assertEquals(replicaRGA.lookup(), replica.lookup());
         }
         assertEquals(replicaRGA.lookup(), replica.lookup());
     }

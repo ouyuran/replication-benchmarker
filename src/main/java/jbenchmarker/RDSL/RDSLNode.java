@@ -15,6 +15,10 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
         this.distances = new int[level];
     }
 
+    public String getContentString() {
+        return "";
+    }
+
     public RDSLNode getRight(int level) {
         return this.references[level - 1];
     }
@@ -52,5 +56,47 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
             level++;
         }
         return level;
+    }
+
+    private String getGapString(int gap) {
+        return " ".repeat(gap);
+    }
+
+    private String getNodeString(String c, int gap) {
+        return String.format(
+                "%" + gap +"s",
+                c);
+    }
+
+    private String getNodeString(int c, int gap) {
+        return String.format(
+                "%" + gap +"d",
+                c);
+    }
+    public void print(int gap) {
+        for(int i = RDSLPath.MAX_LEVEL; i > 0; i--) {
+            if(this.getRight(i) == null) continue;
+            String s = "";
+            RDSLNode current = this;
+            int index = 0;
+            while(current != null) {
+                int distance = current.getDistance(i);
+                if (distance == 0) {
+                    s += getNodeString(distance, gap);
+                } else {
+                    s = s + getGapString(gap).repeat(index < 2 ? distance : distance - 1) + getNodeString(distance, gap);
+                }
+                current = current.getRight(i);
+                index++;
+            }
+            System.out.println(s);
+        }
+        String s = getNodeString("*", gap);
+        T current = (T) this.dataNode.getRight(0);
+        while(current != null) {
+            s += getNodeString((String) current.getContentString(), gap);
+            current = (T) current.getRight(0);
+        }
+        System.out.println(s);
     }
 }

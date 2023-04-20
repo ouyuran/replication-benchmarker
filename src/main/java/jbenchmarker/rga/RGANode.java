@@ -119,4 +119,8 @@ public class RGANode<T> implements Serializable, RDSLWalkable {
     public RGANode getRight(int level) {
         return this.next;
     }
+
+    public String getContentString() {
+        return "" + this.content;
+    }
 }

@@ -127,4 +127,37 @@ public class RgaRDSLDocument extends RGADocument {
     public void updateRdslHead(int level, int delta) {
         this.rdslHead.updateRightDistance(level, delta);
     }
+
+    public void print() {
+        this.rdslHead.print(2);
+    }
+//    public void print() {
+//        for(int i = this.maxLevel; i > 0; i--) {
+//            String s = "";
+//            RDSLNode current = this.rdslHead;
+//            int index = 0;
+//            while(current != null) {
+//                int distance = current.getDistance(i);
+//                if (distance == 0 || distance == 1) {
+//                    s += distance;
+//                } else {
+//                    s = s + "-".repeat(index < 2 ? distance : distance - 1) + distance;
+//                }
+//                current = current.getRight(i);
+//                index++;
+//            }
+//            System.out.println(s);
+//        }
+//        String s = "";
+//        RGANode current = this.getHead();
+//        while(current != null) {
+//            if(current.isHead()) {
+//                s += "*";
+//            } else {
+//                s += current.getContent();
+//            }
+//            current = current.getRight(0);
+//        }
+//        System.out.println(s);
+//    }
 }

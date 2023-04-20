@@ -45,9 +45,10 @@ public class RDSLPath<T extends RDSLWalkable> {
         // this first skip item for each level (a, b, e) should not be counted
         // while first data item should be counted
         int totalDistance = 0;
+        if(level > this.totalLevels) return 0;
         if(level > 0) {
-            int index = Math.min(this.totalLevels, level) - 1;
-            ArrayList<RDSLFootPrint<RDSLNode<T>>> footPrints = this.levels[index];
+//            int index = Math.min(this.totalLevels, level) - 1;
+            ArrayList<RDSLFootPrint<RDSLNode<T>>> footPrints = this.levels[level - 1];
             for(int i = 1; i < footPrints.size(); i++) {
                 totalDistance += footPrints.get(i).getDistance();
             }
@@ -61,6 +62,7 @@ public class RDSLPath<T extends RDSLWalkable> {
     }
 
     public int getDistance(int level) {
+//        level = Math.min(this.totalLevels, level);
         // should count from level - 1 to 0
         level--;
         int total = 0;

@@ -42,4 +42,8 @@ public class RgaRDSLMerge extends RGAMerge {
 
         return lop;
     }
+
+    public void print() {
+        ((RgaRDSLDocument) this.getDoc()).print();
+    }
 }
