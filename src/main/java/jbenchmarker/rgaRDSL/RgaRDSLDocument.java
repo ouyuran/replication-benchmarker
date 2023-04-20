@@ -48,32 +48,26 @@ public class RgaRDSLDocument extends RGADocument {
         if (rgaop.getType() == SequenceOperation.OpType.delete) {
 //            RemoteDelete(rgaop);
         } else {
-            RemoteInsert(rgaop);
+            LocalInsert(rgaop);
         }
     }
-    private void RemoteInsert(RgaRDSLOperation op) {
+    private void LocalInsert(RgaRDSLOperation op) {
         RGANode newnd = new RGANode(op.getS4VTms(), op.getContent());
         RGANode prev, next;
         RGAS4Vector s4v = op.getS4VTms();
         prev = (RGANode) op.getPath().getLastDataNode();
-//        if (op.getS4VPos() == null) {
-//            prev = head;
-//        } else {
-//            prev = hash.get(op.getS4VPos());
-//        }
         if (prev == null) {
             throw new NoSuchElementException("RemoteInsert");
         }
         next = prev.getNext();
 
-        while (next != null) {
-            if (s4v.compareTo(next.getKey()) == RGAS4Vector.AFTER) {
-                break;
-            }
-            prev = next;
-            next = next.getNext();
-            op.getPath().addLevel0(new RDSLFootPrint(prev, 0));
-        }
+//        while (next != null) {
+//            if (s4v.compareTo(next.getKey()) == RGAS4Vector.AFTER) {
+//                break;
+//            }
+//            prev = next;
+//            next = next.getNext();
+//        }
 
         newnd.setNext(next);
         prev.setNext(newnd);
@@ -108,7 +102,7 @@ public class RgaRDSLDocument extends RGADocument {
                 }
             }
         }
-        op.getPath().addLevel0(new RDSLFootPrint(newnd, 0));
+//        op.getPath().addLevel0(new RDSLFootPrint(newnd, 0));
     }
 
     public  int getMaxLevel() {

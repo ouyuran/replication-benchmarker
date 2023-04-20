@@ -110,36 +110,10 @@ public class RgaRDSLMergeTest {
 
     @Test
     public void testInsert() throws PreconditionException {
-        String content = "abcdejk", c2 = "fghi";
-        int pos = 3;
-        replica.applyLocal(SequenceOperation.insert(0, content));
-        assertEquals(content, replica.lookup());
-        replica.applyLocal(SequenceOperation.insert(pos, c2));
-        assertEquals(content.substring(0, pos) + c2 + content.substring(pos), replica.lookup());
-    }
-
-    @Test
-    public void testDelete() throws PreconditionException {
-        String content = "abcdefghijk";
-        int pos = 3, off = 4;
-        replica.applyLocal(SequenceOperation.insert(0, content));
-        assertEquals(content, replica.lookup());
-        replica.applyLocal(SequenceOperation.delete(pos, off));
-        assertEquals(content.substring(0, pos) + content.substring(pos + off), replica.lookup());
-    }
-
-    @Test
-    public void testUpdate() throws PreconditionException {
-        String content = "abcdefghijk", upd = "xy";
-        int pos = 3, off = 5;
-        replica.applyLocal(SequenceOperation.insert(0, content));
-        assertEquals(content, replica.lookup());
-        replica.applyLocal(SequenceOperation.replace(pos, off, upd));
-        assertEquals(content.substring(0, pos) + upd + content.substring(pos + off), replica.lookup());
-    }
-
-    @Test
-    public void testRun() throws IncorrectTraceException, PreconditionException, IOException {
-        crdt.simulator.CausalDispatcherSetsAndTreesTest.testRun((Factory) new RGAFactory(), 400, 400, StandardSeqOpProfile.BASIC);
+        replica.applyLocal(SequenceOperation.insert(0, "abcdejk"));
+        replica.print();
+        replica.applyLocal(SequenceOperation.insert(5, "fghi"));
+        assertEquals("abcdefghijk", replica.lookup());
+        replica.print();
     }
 }

@@ -30,14 +30,20 @@ public class RgaRDSLMerge extends RGAMerge {
         offset = opt.getContent().size();
         RDSLPath<RGANode> path = new RDSLPath<>(rgadoc.startLevel());
         s4vpos = rgadoc.getVisibleS4V(p, path); // if head, s4vpos = null; if after tail, s4vpos= the last one.
+        RgaRDSLOperation[] ops = new RgaRDSLOperation[offset];
         for (int i = 0; i < offset; i++) {
             this.siteVC.inc(this.getReplicaNumber());
             s4vtms = new RGAS4Vector(this.getReplicaNumber(), this.siteVC);
             rgaop = new RgaRDSLOperation(p + i, s4vpos, opt.getContent().get(i), s4vtms, path);
             s4vpos = s4vtms; // The s4v of the current insert becomes the s4vpos of next insert.
             lop.add(rgaop);
-            rgadoc.apply(rgaop);
+            ops[i] = rgaop;
+//          rgadoc.apply(rgaop);
 //			purger.setLastVC(this.getReplicaNumber(),this.siteVC);
+        }
+
+        for (int i = offset - 1; i >= 0; i--) {
+            rgadoc.apply(ops[i]);
         }
 
         return lop;
