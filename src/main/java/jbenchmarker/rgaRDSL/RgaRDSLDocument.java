@@ -15,8 +15,6 @@ import java.util.NoSuchElementException;
 
 public class RgaRDSLDocument extends RGADocument {
     private RDSLNode<RGANode> rdslHead;
-    private int numberOfRgaNodes = 0;
-//    private int maxLevel = 0;
 
     public RgaRDSLDocument() {
         super();

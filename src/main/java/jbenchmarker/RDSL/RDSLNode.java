@@ -139,4 +139,15 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
             }
         }
     }
+
+    public void handleUpdate(T dataNode, RDSLPath<T> path, int delta) {
+//        RDSLNode<T> rdslNode = path.getRDSLNodeForLastDataNode();
+        for(int l = 1; l <= this.getLevel(); l++) {
+            RDSLFootPrint leftFp = path.getLastFootPrintOfLevel(l);
+            RDSLNode left = leftFp != null ? (RDSLNode) leftFp.getNode() : this;
+            RDSLNode right = left.getRight(l);
+            // should always has right
+            right.updateDistance(l, delta);
+        }
+    }
 }

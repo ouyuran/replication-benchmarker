@@ -1,10 +1,12 @@
 package jbenchmarker.rgasplit;
 
+import jbenchmarker.RDSL.RDSLWalkable;
+
 import java.io.Serializable;
 import java.util.List;
 
 
-public class RgaSNode<T> implements Serializable {
+public class RgaSNode<T> implements Serializable, RDSLWalkable {
 
 	private RgaSS3Vector key;		 
 	private RgaSNode next;
@@ -180,4 +182,19 @@ public class RgaSNode<T> implements Serializable {
 		this.tomb = tomb;
 	}
 
+	public int getDistance(int level) {
+		return content.size();
+	}
+
+	public String getContentString() {
+		String s = "";
+		for (T c: content) {
+			s += c;
+		}
+		return s;
+	}
+
+	public RgaSNode<T> getRight(int level) {
+		return next;
+	}
 }

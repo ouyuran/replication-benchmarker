@@ -15,7 +15,7 @@ import jbenchmarker.rgasplit.RgaSDocument.Position;
 
 public class RgaSMerge extends MergeAlgorithm {
 
-	private VectorClock siteVC;
+	protected VectorClock siteVC;
 
 	
 	
