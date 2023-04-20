@@ -61,47 +61,12 @@ public class RgaRDSLDocument extends RGADocument {
         }
         next = prev.getNext();
 
-//        while (next != null) {
-//            if (s4v.compareTo(next.getKey()) == RGAS4Vector.AFTER) {
-//                break;
-//            }
-//            prev = next;
-//            next = next.getNext();
-//        }
-
         newnd.setNext(next);
         prev.setNext(newnd);
         hash.put(op.getS4VTms(), newnd);
         ++size;
 
-        // update RDSL
-        int level = RDSLNode.getRandomLevel();
-        RDSLNode<RGANode> rdslNode = null;
-        if(level > 0) {
-            rdslNode = new RDSLNode<RGANode>(newnd, level);
-        }
-        System.out.println(String.format("# %s, level %d", newnd.getContent(), level));
-        for(int l = 1; l <= this.getMaxLevel(); l++) {
-            RDSLFootPrint leftFp = op.getPath().getLastFootPrintOfLevel(l);
-            RDSLNode left = leftFp != null ? (RDSLNode) leftFp.getNode() : this.rdslHead;
-            RDSLNode right = left.getRight(l);
-            if(l <= level) {
-                left.setRight(l, rdslNode);
-                rdslNode.setRight(l, right);
-                rdslNode.updateDistance(l, op.getPath().getDistance(l));
-                System.out.println(String.format("Update self distance %s, level %d, delta %d", newnd.getContent(), l, op.getPath().getDistance(l)));
-                if(right != null) {
-                    right.updateDistance(l, newnd.getDistance(0) - rdslNode.getDistance(l));
-                    System.out.println(String.format("Update right distance %s, level %d, delta %d",
-                            ((RGANode) rdslNode.getRight(l).getDataNode()).getContent(), l, op.getPath().getDistance(l)));
-                }
-            } else {
-                if(right != null) {
-                    right.updateDistance(l , 1);
-                }
-            }
-        }
-//        op.getPath().addLevel0(new RDSLFootPrint(newnd, 0));
+        this.rdslHead.handleInsert(newnd, op.getPath());
     }
 
     public  int getMaxLevel() {

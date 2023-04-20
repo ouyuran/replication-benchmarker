@@ -60,7 +60,7 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
         return this.dataNode;
     }
 
-    public static int getRandomLevel() {
+    private int getRandomLevel() {
         int level = 0;
         while(Math.random() < p) {
             level++;
@@ -108,5 +108,35 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
             current = (T) current.getRight(0);
         }
         System.out.println(s);
+    }
+
+    public void handleInsert(T dataNode, RDSLPath<T> path) {
+        // always call this from rdslHead
+        int level = this.getRandomLevel();
+        RDSLNode<T> rdslNode = null;
+        if(level > 0) {
+            rdslNode = new RDSLNode<T>(dataNode, level);
+        }
+        System.out.println(String.format("# %s, level %d", dataNode.getContentString(), level));
+        for(int l = 1; l <= this.getLevel(); l++) {
+            RDSLFootPrint leftFp = path.getLastFootPrintOfLevel(l);
+            RDSLNode left = leftFp != null ? (RDSLNode) leftFp.getNode() : this;
+            RDSLNode right = left.getRight(l);
+            if(l <= level) {
+                left.setRight(l, rdslNode);
+                rdslNode.setRight(l, right);
+                rdslNode.updateDistance(l, path.getDistance(l));
+                System.out.println(String.format("Update self distance %s, level %d, delta %d", dataNode.getContentString(), l, path.getDistance(l)));
+                if(right != null) {
+                    right.updateDistance(l, dataNode.getDistance(0) - rdslNode.getDistance(l));
+                    System.out.println(String.format("Update right distance %s, level %d, delta %d",
+                            ((RGANode) rdslNode.getRight(l).getDataNode()).getContent(), l, path.getDistance(l)));
+                }
+            } else {
+                if(right != null) {
+                    right.updateDistance(l , 1);
+                }
+            }
+        }
     }
 }
