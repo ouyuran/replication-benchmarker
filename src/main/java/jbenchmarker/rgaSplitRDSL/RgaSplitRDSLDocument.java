@@ -62,7 +62,7 @@ public class RgaSplitRDSLDocument<T> extends RgaSDocument<T> {
             int offset = left.getDistance(0) + posLeft;
             System.out.println(String.format("#### split %s, %d; posLeft %d", left.getContentString(), left.getDistance(0), posLeft));
             right = remoteSplit(left, offset);
-            this.rdslHead.handleUpdate(left, path, offset);
+            this.rdslHead.handleUpdate(left, path, posLeft);
             this.rdslHead.handleInsert(right, path);
         } else {
             right = left.getNext();
