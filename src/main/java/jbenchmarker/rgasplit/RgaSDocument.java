@@ -16,9 +16,9 @@ import crdt.Operation;
 
 public class RgaSDocument<T> implements Document {
 
-	private HashMap<RgaSS3Vector, RgaSNode> hash;
+	protected HashMap<RgaSS3Vector, RgaSNode> hash;
 	private RgaSNode head;
-	private int size = 0;
+	protected int size = 0;
 
 
 
@@ -46,7 +46,7 @@ public class RgaSDocument<T> implements Document {
 		}
 	}
 
-	private void remoteInsert(RgaSOperation op) {
+	protected void remoteInsert(RgaSOperation op) {
 
 		RgaSNode newnd = new RgaSNode(op.getS3vtms(), op.getContent());
 		RgaSNode node, next=null;
@@ -77,7 +77,7 @@ public class RgaSDocument<T> implements Document {
 		size+=newnd.size();
 	}
 
-	private void remoteDelete(RgaSOperation op) {
+	protected void remoteDelete(RgaSOperation op) {
 
 		int offsetAbs1 = op.getOffset1()+op.getS3vpos().getOffset();
 		int offsetRel1 = op.getOffset1();
@@ -106,7 +106,7 @@ public class RgaSDocument<T> implements Document {
 		}
 	}
 
-	public void remoteSplit(RgaSNode node, int offsetAbs) {
+	public RgaSNode remoteSplit(RgaSNode node, int offsetAbs) {
 
 		if (offsetAbs-node.getOffset()>0 && node.size()-offsetAbs+node.getOffset()>0){
 
@@ -128,8 +128,10 @@ public class RgaSDocument<T> implements Document {
 			node.setLink(end);
 
 			hash.put(node.getKey(), node);			
-			hash.put(end.getKey(), end);	
+			hash.put(end.getKey(), end);
+			return end;
 		}
+		return null;
 	}
 
 

@@ -167,7 +167,8 @@ public class RgaSNode<T> implements Serializable, RDSLWalkable {
 	}
 
 	public int size() {
-		return size;
+//		return size;
+		return content == null ? 0 : content.size();
 	}
 
 	public void setSize(int size) {
@@ -183,7 +184,7 @@ public class RgaSNode<T> implements Serializable, RDSLWalkable {
 	}
 
 	public int getDistance(int level) {
-		return content.size();
+		return size();
 	}
 
 	public String getContentString() {

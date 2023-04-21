@@ -37,7 +37,7 @@ public class RDSLWalker<T extends RDSLWalkable> {
         if(this.currentLevel > 0) {
             return this.posLeft > this.currentNode.getRightDistance(this.currentLevel);
         } else {
-            return this.posLeft >= this.dataNode.getRight(0).getDistance(0);
+            return this.posLeft > 0;
         }
     }
     public void goRight() {
@@ -69,11 +69,11 @@ public class RDSLWalker<T extends RDSLWalkable> {
     }
 
     public boolean finish() {
-        if(this.posLeft < 0 || this.currentLevel < 0) {
-            System.out.println("Should not goes here");
+        if(this.currentLevel < 0) {
+            System.out.println("@@@@@@@@@ Should not goes here @@@@@@@@@@");
             return true;
         }
-        return this.posLeft == 0 && this.currentLevel == 0;
+        return this.posLeft <= 0 && this.currentLevel == 0;
     }
 
     public T getCurrentDataNode() {
@@ -82,6 +82,10 @@ public class RDSLWalker<T extends RDSLWalkable> {
 
     public int getPosLeft() {
         return this.posLeft;
+    }
+
+    public RDSLPath getPath() {
+        return this.path;
     }
 
 }

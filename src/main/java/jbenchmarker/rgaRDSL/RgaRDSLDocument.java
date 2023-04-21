@@ -1,14 +1,11 @@
 package jbenchmarker.rgaRDSL;
 
-import crdt.Operation;
-import jbenchmarker.RDSL.RDSLFootPrint;
 import jbenchmarker.RDSL.RDSLNode;
 import jbenchmarker.RDSL.RDSLPath;
 import jbenchmarker.RDSL.RDSLWalker;
 import jbenchmarker.core.SequenceOperation;
 import jbenchmarker.rga.RGADocument;
 import jbenchmarker.rga.RGANode;
-import jbenchmarker.rga.RGAOperation;
 import jbenchmarker.rga.RGAS4Vector;
 
 import java.util.NoSuchElementException;
@@ -68,7 +65,7 @@ public class RgaRDSLDocument extends RGADocument {
     }
 
     public  int getMaxLevel() {
-        return this.rdslHead.getLevel();
+        return this.rdslHead.getHeadLevel();
     }
     public int startLevel() {
         return Math.max(this.getMaxLevel(), 1);
