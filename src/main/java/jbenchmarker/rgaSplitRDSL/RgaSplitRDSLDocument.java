@@ -8,6 +8,8 @@ import jbenchmarker.core.SequenceOperation;
 import jbenchmarker.rgasplit.RgaSDocument;
 import jbenchmarker.rgasplit.RgaSNode;
 
+import java.util.List;
+
 public class RgaSplitRDSLDocument<T> extends RgaSDocument<T> {
 
     private RDSLNode<RgaSNode> rdslHead;
@@ -60,8 +62,8 @@ public class RgaSplitRDSLDocument<T> extends RgaSDocument<T> {
         if(posLeft < 0) {
             //todo
             int offset = left.getDistance(0) + posLeft;
-            System.out.println(String.format("#### split %s, %d; posLeft %d", left.getContentString(), left.getDistance(0), posLeft));
-            right = remoteSplit(left, offset);
+            System.out.println(String.format("#### split %s, %d; posLeft %d, offset %d", left.getContentString(), left.getDistance(0), posLeft, offset));
+            right = localSplit(left, offset);
             this.rdslHead.handleUpdate(left, path, posLeft);
             this.rdslHead.handleInsert(right, path);
         } else {
@@ -73,5 +75,30 @@ public class RgaSplitRDSLDocument<T> extends RgaSDocument<T> {
         hash.put(op.getS3vtms(), newnd);
         size+=newnd.size();
         this.rdslHead.handleInsert(newnd, path);
+    }
+
+    public RgaSNode localSplit(RgaSNode node, int offset) {
+        if (node.size() > offset){
+
+            List<T> a= null;
+            List<T> b = null;
+
+            if (node.isVisible()){
+                a = node.getContent().subList(0, offset);
+                b = node.getContent().subList(offset, node.size());
+            }
+            // only for localSplit, have not calculated offsetAbs which is needed for remote op
+            RgaSNode end = new RgaSNode(node.clone(), b, 0);
+            end.setNext(node.getNext());
+
+            node.setContent(a);
+            node.setNext(end);
+            node.setLink(end);
+            System.out.println(String.format("left %s, right %s", node.getContentString(), end.getContentAsString()));
+            hash.put(node.getKey(), node);
+            hash.put(end.getKey(), end);
+            return end;
+        }
+        return null;
     }
 }
