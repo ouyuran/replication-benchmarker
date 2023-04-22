@@ -1,5 +1,7 @@
 package jbenchmarker.RDSL;
 
+import Tools.MyLogger;
+
 public class RDSLWalker<T extends RDSLWalkable> {
     private RDSLNode<T> currentNode;
     private T dataNode;
@@ -41,7 +43,7 @@ public class RDSLWalker<T extends RDSLWalkable> {
         }
     }
     public void goRight() {
-        System.out.println("goRight");
+        MyLogger.log("goRight");
         if(this.currentLevel > 0) {
             RDSLNode right = this.currentNode.getRight(this.currentLevel);
             this.posLeft -= right.getDistance(this.currentLevel);
@@ -55,7 +57,7 @@ public class RDSLWalker<T extends RDSLWalkable> {
     }
 
     public void goDown() {
-        System.out.println(String.format("goDown currentLevel %d, posLeft %d", this.currentLevel, this.posLeft));
+        MyLogger.log(String.format("goDown currentLevel %d, posLeft %d", this.currentLevel, this.posLeft));
         this.currentLevel --;
         if(this.currentLevel == 0) {
             this.dataNode = this.currentNode.getDataNode();
