@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jbenchmarker.logootRDSL;
+package jbenchmarker.logootSplitRDSL;
 
-import collect.RangeList;
 import crdt.Factory;
 import crdt.Operation;
 import jbenchmarker.RDSL.RDSLNode;
@@ -29,45 +28,45 @@ import jbenchmarker.logoot.ListIdentifier;
 import jbenchmarker.logoot.LogootOperation;
 import jbenchmarker.logoot.LogootStrategy;
 import jbenchmarker.logoot.TimestampedDocument;
+import jbenchmarker.logootRDSL.LogootRDSLIdWalker;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * A Logoot document. Contains a list of Charater and the corresponding list of LogootIndentitifer.
  * @author urso mehdi
  */
-public class LogootRDSLDocument<T> implements  Factory<LogootRDSLDocument<T>>, TimestampedDocument {
+public class LogootSplitRDSLDocument<T> implements  Factory<LogootSplitRDSLDocument<T>>, TimestampedDocument {
     private int myClock;
     protected int replicaNumber;
 
 //    final protected RangeList<ListIdentifier> idTable;
 //    final protected RangeList<T> document;
 //    private SinglyList<T> dataItems;
-    private LogootRDSLNode<T> dataHead;
-    private RDSLNode<LogootRDSLNode<T>> rdslHead;
+    private LogootSplitRDSLNode<T> dataHead;
+    private RDSLNode<LogootSplitRDSLNode<T>> rdslHead;
     private List<Character> head;
     final protected LogootStrategy strategy;
 
-    public LogootRDSLDocument(int r, LogootStrategy strategy) {
+    public LogootSplitRDSLDocument(int r, LogootStrategy strategy) {
         super();
 //        idTable = new RangeList<ListIdentifier>();
         this.strategy = strategy;
         this.replicaNumber = r;
 
         myClock = 0;
-        this.dataHead = new LogootRDSLNode<>(null, strategy.begin());
-        this.dataHead.addAfter(new LogootRDSLNode<>(null, strategy.end()));
+        this.dataHead = new LogootSplitRDSLNode<>(null, strategy.begin());
+        this.dataHead.addAfter(new LogootSplitRDSLNode<>(null, strategy.end()));
         this.rdslHead = new RDSLNode<>(this.dataHead, RDSLPath.MAX_LEVEL);
     } 
     
     @Override
     public String view() {
         StringBuilder s = new StringBuilder();
-        LogootRDSLNode current = (LogootRDSLNode) this.dataHead.getRight(0);
+        LogootSplitRDSLNode current = (LogootSplitRDSLNode) this.dataHead.getRight(0);
         while (!current.getId().equals(strategy.end())) {
             s.append(current.getContentString());
-            current = (LogootRDSLNode) current.getRight(0);
+            current = (LogootSplitRDSLNode) current.getRight(0);
         }
         return s.toString();
     }
@@ -77,10 +76,10 @@ public class LogootRDSLDocument<T> implements  Factory<LogootRDSLDocument<T>>, T
         return view().length();
     }
 
-    public RDSLWalker<LogootRDSLNode> findLeftFromPosition(int pos) {
+    public RDSLWalker<LogootSplitRDSLNode> findLeftFromPosition(int pos) {
         int level = Math.max(this.rdslHead.getHeadLevel(), 1);
-        RDSLPath<LogootRDSLNode> path = new RDSLPath(level);
-        RDSLWalker<LogootRDSLNode> walker = new RDSLWalker<LogootRDSLNode>(this.rdslHead, pos, level, path);
+        RDSLPath<LogootSplitRDSLNode> path = new RDSLPath(level);
+        RDSLWalker<LogootSplitRDSLNode> walker = new RDSLWalker<LogootSplitRDSLNode>(this.rdslHead, pos, level, path);
         while(!walker.finish()){
             if(walker.shouldGoRight()) {
                 walker.goRight();
@@ -91,10 +90,10 @@ public class LogootRDSLDocument<T> implements  Factory<LogootRDSLDocument<T>>, T
         return walker;
     }
 
-    public RDSLWalker<LogootRDSLNode> findLeftFromIdentifier(ListIdentifier id) {
+    public RDSLWalker<LogootSplitRDSLNode> findLeftFromIdentifier(ListIdentifier id) {
         int level = Math.max(this.rdslHead.getHeadLevel(), 1);
-        RDSLPath<LogootRDSLNode> path = new RDSLPath(level);
-        LogootRDSLIdWalker<LogootRDSLNode> walker = new LogootRDSLIdWalker<LogootRDSLNode>(this.rdslHead, id, level);
+        RDSLPath<LogootSplitRDSLNode> path = new RDSLPath(level);
+        LogootRDSLIdWalker<LogootSplitRDSLNode> walker = new LogootRDSLIdWalker<LogootSplitRDSLNode>(this.rdslHead, id, level);
         while(!walker.finish()){
             if(walker.shouldGoRight()) {
                 walker.goRight();
@@ -109,21 +108,21 @@ public class LogootRDSLDocument<T> implements  Factory<LogootRDSLDocument<T>>, T
     public void apply(Operation op) {
         LogootOperation lg = (LogootOperation) op;
         ListIdentifier idToSearch = lg.getPosition();
-        LogootRDSLNode left = (LogootRDSLNode) this.findLeftFromIdentifier(idToSearch).getPath().getLastDataNode();
+        LogootSplitRDSLNode left = (LogootSplitRDSLNode) this.findLeftFromIdentifier(idToSearch).getPath().getLastDataNode();
         //Insertion et Delete
         if (lg.getType() == OpType.insert) {
-            left.addAfter(new LogootRDSLNode<>((T) lg.getContent(), idToSearch));
+            left.addAfter(new LogootSplitRDSLNode<>((List<T>) lg.getContent(), idToSearch));
         } else {
             left.removeAfter();
         }
     }
     
-    public void insert(LogootRDSLNode<T> left, LogootRDSLNode<T> node, RDSLPath path) {
+    public void insert(LogootSplitRDSLNode<T> left, LogootSplitRDSLNode<T> node, RDSLPath path) {
         left.addAfter(node);
         this.rdslHead.handleInsert(node, path);
     }
     
-    public void remove(LogootRDSLNode<T> left) {
+    public void remove(LogootSplitRDSLNode<T> left) {
         left.removeAfter();
         //todo
     }
@@ -142,8 +141,8 @@ public class LogootRDSLDocument<T> implements  Factory<LogootRDSLDocument<T>>, T
 
     // TODO : duplicate strategy ?
     @Override
-    public LogootRDSLDocument<T> create() {
-        return new LogootRDSLDocument<T>(replicaNumber, strategy);
+    public LogootSplitRDSLDocument<T> create() {
+        return new LogootSplitRDSLDocument<T>(replicaNumber, strategy);
     }
 
     @Override
