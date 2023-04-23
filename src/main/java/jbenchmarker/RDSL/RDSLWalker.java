@@ -3,11 +3,11 @@ package jbenchmarker.RDSL;
 import Tools.MyLogger;
 
 public class RDSLWalker<T extends RDSLWalkable> {
-    private RDSLNode<T> currentNode;
-    private T dataNode;
+    protected RDSLNode<T> currentNode;
+    protected T dataNode;
     private int posLeft;
     private RDSLPath path;
-    private int currentLevel;
+    protected int currentLevel;
 
     public RDSLWalker(RDSLNode start, int pos, int level) {
         this.currentNode = start;
@@ -64,10 +64,6 @@ public class RDSLWalker<T extends RDSLWalkable> {
             this.posLeft -= this.dataNode.getDistance(0);
         }
         this.addCurrentFootPrint();
-    }
-
-    public boolean canGo() {
-        return this.currentLevel > 0 || this.currentNode.getRight(this.currentLevel) != null;
     }
 
     public boolean finish() {

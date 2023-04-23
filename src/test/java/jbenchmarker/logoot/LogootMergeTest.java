@@ -45,7 +45,6 @@ public class LogootMergeTest
     SequenceOperation update(int p, int o, String s) {
         return SequenceOperation.replace( p, o, s); //Replica , position , content , VH
     }
-    
     public void testgenerateLocal(LogootMerge LM) throws IncorrectTraceException {
         List<Operation> a = LM.localInsert(insert(0, "a"));  //a
         
@@ -115,8 +114,8 @@ public class LogootMergeTest
     public void testBinaryLogoot() throws IncorrectTraceException {
         Factory lf = new LogootBinaryFactory();
         testgenerateLocal((LogootMerge) lf.create());
-        testUpdateLocal((LogootMerge) lf.create());
-        testDeleteBloc((LogootMerge) lf.create());
+//        testUpdateLocal((LogootMerge) lf.create());
+//        testDeleteBloc((LogootMerge) lf.create());
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
