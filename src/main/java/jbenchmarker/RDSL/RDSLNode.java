@@ -9,7 +9,7 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
     private RDSLNode[] references;
     private int[] distances;
 
-    private static final double p = 1.0 / 2;
+    private static final double p = 1.0 / 32;
 
     public RDSLNode(T dataNode, int level) {
         this.dataNode = dataNode;

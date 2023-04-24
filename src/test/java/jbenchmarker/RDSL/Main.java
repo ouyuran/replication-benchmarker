@@ -9,6 +9,7 @@ import jbenchmarker.rga.RGAMerge;
 import jbenchmarker.rgasplit.RgaSMerge;
 import org.junit.Before;
 import org.junit.Test;
+import org.openjdk.jol.info.GraphLayout;
 
 import java.text.NumberFormat;
 
@@ -51,6 +52,7 @@ public class Main {
         long endTime = System.nanoTime();
         long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         NumberFormat formatter = NumberFormat.getInstance();
+        System.out.println(GraphLayout.parseInstance(replica.getDoc()).toFootprint());
         System.out.println("Execution time     : " + formatter.format(endTime - startTime) + " nanoseconds");
         System.out.println("Memory total usage : " + formatter.format(Runtime.getRuntime().totalMemory()) + " bytes");
         System.out.println("Memory usage       : " + formatter.format(endMemory - startMemory) + " bytes");
@@ -63,8 +65,25 @@ public class Main {
     }
 
     @Test
+    public void testRgaTreeEndInsert100() throws PreconditionException {
+        TestDataElement[] testData = TestDataFile.getTestDataFromFile(TestDataFile.filePath + "end100");
+        runTestCase(rgaTree, testData);
+    }
+
+    @Test
     public void testRgaRDSLEndInsert100() throws PreconditionException {
         TestDataElement[] testData = TestDataFile.getTestDataFromFile(TestDataFile.filePath + "end100");
+        runTestCase(rgaRDSL, testData);
+    }
+
+    @Test
+    public void testRgaTreeEndInsert1000() throws PreconditionException {
+        TestDataElement[] testData = TestDataFile.getTestDataFromFile(TestDataFile.filePath + "end1000");
+        runTestCase(rgaTree, testData);
+    }
+    @Test
+    public void testRgaRDSLEndInsert1000() throws PreconditionException {
+        TestDataElement[] testData = TestDataFile.getTestDataFromFile(TestDataFile.filePath + "end1000");
         runTestCase(rgaRDSL, testData);
     }
 
