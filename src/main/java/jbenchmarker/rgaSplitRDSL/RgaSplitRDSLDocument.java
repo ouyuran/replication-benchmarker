@@ -62,7 +62,7 @@ public class RgaSplitRDSLDocument<T> extends RgaSDocument<T> {
         RgaSNode right = null;
         if(posLeft < 0) {
             int offset = left.getDistance(0) + posLeft;
-            MyLogger.log(String.format("#### split %s, %d; posLeft %d, offset %d", left.getContentString(), left.getDistance(0), posLeft, offset));
+            //MyLogger.log(String.format("#### split %s, %d; posLeft %d, offset %d", left.getContentString(), left.getDistance(0), posLeft, offset));
             right = localSplit(left, offset);
             this.rdslHead.handleUpdate(left, path, posLeft);
             this.rdslHead.handleInsert(right, path);
@@ -94,7 +94,7 @@ public class RgaSplitRDSLDocument<T> extends RgaSDocument<T> {
             node.setContent(a);
             node.setNext(end);
             node.setLink(end);
-            MyLogger.log(String.format("left %s, right %s", node.getContentString(), end.getContentAsString()));
+            //MyLogger.log(String.format("left %s, right %s", node.getContentString(), end.getContentAsString()));
             hash.put(node.getKey(), node);
             hash.put(end.getKey(), end);
             return end;

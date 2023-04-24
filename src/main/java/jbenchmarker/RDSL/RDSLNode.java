@@ -9,7 +9,7 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
     private RDSLNode[] references;
     private int[] distances;
 
-    private static final double p = 1.0 / 32;
+    private static final double p = 1.0 / 4;
 
     public RDSLNode(T dataNode, int level) {
         this.dataNode = dataNode;
@@ -114,7 +114,7 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
             outputs.add(s);
         }
         for(int i = outputs.size() - 1; i >=0; i--) {
-            MyLogger.log(outputs.get(i));
+            //MyLogger.log(outputs.get(i));
         }
     }
 
@@ -136,7 +136,7 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
         if(level > 0) {
             rdslNode = new RDSLNode<T>(dataNode, level);
         }
-        MyLogger.log(String.format("# %s, level %d", dataNode.getContentString(), level));
+        //MyLogger.log(String.format("# %s, level %d", dataNode.getContentString(), level));
         for(int l = 1; l <= Math.max(level, this.getHeadLevel()); l++) {
             RDSLFootPrint leftFp = path.getLastFootPrintOfLevel(l);
             RDSLNode left = leftFp != null ? (RDSLNode) leftFp.getNode() : this;
@@ -146,18 +146,18 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
                 rdslNode.setRight(l, right);
                 int selfDis = path.getDistance(l);
                 rdslNode.updateDistance(l, selfDis);
-                MyLogger.log(String.format("Update self distance %s, level %d, delta %d", dataNode.getContentString(), l, selfDis));
+                //MyLogger.log(String.format("Update self distance %s, level %d, delta %d", dataNode.getContentString(), l, selfDis));
                 if(right != null) {
                     int rightDelta = dataNode.getDistance(0) - rdslNode.getDistance(l);
                     right.updateDistance(l, rightDelta);
-                    MyLogger.log(String.format("Update right distance %s, level %d, delta %d",
-                            ((T) rdslNode.getRight(l).getDataNode()).getContentString(), l, rightDelta));
+                    //MyLogger.log(String.format("Update right distance %s, level %d, delta %d",
+                    //        ((T) rdslNode.getRight(l).getDataNode()).getContentString(), l, rightDelta));
                 }
             } else {
                 if(right != null) {
                     right.updateDistance(l , dataNode.getDistance(0));
-                    MyLogger.log(String.format("Update right distance %s, level %d, delta %d",
-                            ((T) right.getDataNode()).getContentString(), l, dataNode.getDistance(0)));
+                    //MyLogger.log(String.format("Update right distance %s, level %d, delta %d",
+                    //        ((T) right.getDataNode()).getContentString(), l, dataNode.getDistance(0)));
                 }
             }
         }

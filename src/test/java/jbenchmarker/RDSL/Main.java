@@ -77,6 +77,11 @@ public class Main {
     }
 
     @Test
+    public void testRgaEndInsert1000() throws PreconditionException {
+        TestDataElement[] testData = TestDataFile.getTestDataFromFile(TestDataFile.filePath + "end1000");
+        runTestCase(rga, testData);
+    }
+    @Test
     public void testRgaTreeEndInsert1000() throws PreconditionException {
         TestDataElement[] testData = TestDataFile.getTestDataFromFile(TestDataFile.filePath + "end1000");
         runTestCase(rgaTree, testData);
@@ -88,15 +93,21 @@ public class Main {
     }
 
     @Test
-    public void testRgaEndInsert1k() throws PreconditionException {
-        TestDataElement[] testData = TestDataFile.getTestDataFromFile(TestDataFile.filePath + "end1000");
+    public void testRgaEndInsert10k() throws PreconditionException {
+        TestDataElement[] testData = TestDataFile.getTestDataFromFile(TestDataFile.filePath + "end10000");
         runTestCase(rga, testData);
     }
 
     @Test
-    public void testRgaEndInsert10k() throws PreconditionException {
+    public void testRgaTreeEndInsert10k() throws PreconditionException {
         TestDataElement[] testData = TestDataFile.getTestDataFromFile(TestDataFile.filePath + "end10000");
-        runTestCase(rga, testData);
+        runTestCase(rgaTree, testData);
+    }
+
+    @Test
+    public void testRgaRDSLEndInsert10k() throws PreconditionException {
+        TestDataElement[] testData = TestDataFile.getTestDataFromFile(TestDataFile.filePath + "end10000");
+        runTestCase(rgaRDSL, testData);
     }
 
     @Test

@@ -100,7 +100,7 @@ public class RgaRDSLMergeTest {
         for(int i = 0; i < 100; i++) {
             int pos = (int) (Math.random() * (i + 1));
             String s = "" + (char) ('a' + pos % 26);
-            MyLogger.log(String.format("@@@@ insert %s at pos %d", s, pos));
+            //MyLogger.log(String.format("@@@@ insert %s at pos %d", s, pos));
             replica.applyLocal(SequenceOperation.insert(pos, s));
             replicaRGA.applyLocal(SequenceOperation.insert(pos, s));
             replica.print();
