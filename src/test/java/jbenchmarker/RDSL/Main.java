@@ -181,4 +181,21 @@ public class Main {
         runTestCase(rgaSplitRDSL, testData);
     }
 
+    @Test
+    public void testLogootRandomInsert10k() throws PreconditionException {
+        TestDataElement[] testData = TestDataFile.getTestDataFromFile(TestDataFile.filePath + "random10000");
+        runTestCase(logoot, testData);
+    }
+    @Test
+    public void testLogootTreeRandomInsert10k() throws PreconditionException {
+        TestDataElement[] testData = TestDataFile.getTestDataFromFile(TestDataFile.filePath + "random10000");
+        runTestCase(logootTree, testData);
+    }
+
+    @Test
+    public void testLogootRDSLRandomInsert10k() throws PreconditionException {
+        TestDataElement[] testData = TestDataFile.getTestDataFromFile(TestDataFile.filePath + "random10000");
+        runTestCase(logootRDSL, testData);
+    }
+
 }
