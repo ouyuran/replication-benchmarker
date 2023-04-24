@@ -31,4 +31,17 @@ public class TestDataGenerator {
         return testData;
     }
 
+    public TestDataElement[] generateRandomInsert(int number) {
+        int totalLength = 0;
+        TestDataElement[] testData = new TestDataElement[number];
+        for(int i = 0; i < number; i++) {
+            int length = this.getRandomLength();
+            String s = "a".repeat(length);
+            int pos = (int) (Math.random() * (totalLength + 1));
+            testData[i] = new TestDataElement(s, pos);
+            totalLength += length;
+        }
+        return testData;
+    }
+
 }

@@ -61,7 +61,6 @@ public class RgaSplitRDSLDocument<T> extends RgaSDocument<T> {
         RgaSNode left = (RgaSNode) path.getLastDataNode();
         RgaSNode right = null;
         if(posLeft < 0) {
-            //todo
             int offset = left.getDistance(0) + posLeft;
             MyLogger.log(String.format("#### split %s, %d; posLeft %d, offset %d", left.getContentString(), left.getDistance(0), posLeft, offset));
             right = localSplit(left, offset);

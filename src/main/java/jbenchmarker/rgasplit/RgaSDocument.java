@@ -1,5 +1,6 @@
 package jbenchmarker.rgasplit;
 
+import Tools.MyLogger;
 import jbenchmarker.core.Document;
 import jbenchmarker.core.SequenceOperation;
 
@@ -126,7 +127,7 @@ public class RgaSDocument<T> implements Document {
 			node.setSize(offsetAbs-node.getOffset());
 			node.setNext(end);
 			node.setLink(end);
-			System.out.println(String.format("left %s, right %s", node.getContentString(), end.getContentAsString()));
+			MyLogger.log(String.format("left %s, right %s", node.getContentString(), end.getContentAsString()));
 			hash.put(node.getKey(), node);			
 			hash.put(end.getKey(), end);
 			return end;
