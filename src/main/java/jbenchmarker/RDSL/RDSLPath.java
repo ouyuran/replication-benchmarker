@@ -4,29 +4,31 @@ import jbenchmarker.rga.RGAMerge;
 import jbenchmarker.rga.RGANode;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class RDSLPath<T extends RDSLWalkable> {
-    private ArrayList<RDSLFootPrint<RDSLNode<T>>>[] levels;
-    private ArrayList<RDSLFootPrint<T>> level0;
+    private LinkedList<RDSLFootPrint<RDSLNode<T>>>[] levels;
+    private LinkedList<RDSLFootPrint<T>> level0;
     public static final int MAX_LEVEL = 32;
 
     private int totalLevels;
 
     public RDSLPath(int totalLevels) {
         this.totalLevels = totalLevels;
-        this.levels = new ArrayList[totalLevels];
+        this.levels = new LinkedList[totalLevels];
         for(int i = 0; i < totalLevels; i++) {
-            levels[i] = new ArrayList<RDSLFootPrint<RDSLNode<T>>>();
+            levels[i] = new LinkedList<RDSLFootPrint<RDSLNode<T>>>();
         }
-        level0 = new ArrayList<RDSLFootPrint<T>>();
+        level0 = new LinkedList<RDSLFootPrint<T>>();
     }
 
     public void add(RDSLFootPrint<RDSLNode<T>> footPrint) {
-        this.levels[footPrint.getLevel() - 1].add(footPrint);
+        this.levels[footPrint.getLevel() - 1].addLast(footPrint);
     }
 
     public void addLevel0(RDSLFootPrint<T> footPrint) {
-        this.level0.add(footPrint);
+        this.level0.addLast(footPrint);
     }
 
     private int sumDistances(int level) {
@@ -48,14 +50,15 @@ public class RDSLPath<T extends RDSLWalkable> {
         if(level > this.totalLevels) return 0;
         if(level > 0) {
 //            int index = Math.min(this.totalLevels, level) - 1;
-            ArrayList<RDSLFootPrint<RDSLNode<T>>> footPrints = this.levels[level - 1];
-            for(int i = 1; i < footPrints.size(); i++) {
-                totalDistance += footPrints.get(i).getDistance();
+            Iterator<RDSLFootPrint<RDSLNode<T>>> iterator = this.levels[level - 1].iterator();
+            if(iterator.hasNext()) iterator.next(); // skip the first item
+            while(iterator.hasNext()) {
+                totalDistance += iterator.next().getDistance();
             }
         } else {
-            ArrayList<RDSLFootPrint<T>> footPrints = this.level0;
-            for(int i = 0; i < footPrints.size(); i++) {
-                totalDistance += footPrints.get(i).getDistance();
+            Iterator<RDSLFootPrint<T>> iterator = this.level0.iterator();
+            while(iterator.hasNext()) {
+                totalDistance += iterator.next().getDistance();
             }
         }
         return totalDistance;
@@ -76,10 +79,10 @@ public class RDSLPath<T extends RDSLWalkable> {
     public RDSLFootPrint getLastFootPrintOfLevel(int level) {
         if(level > this.totalLevels) return null;
         if(level > 0) {
-            ArrayList<RDSLFootPrint<RDSLNode<T>>> list = this.levels[level - 1];
-            return list.get(list.size() - 1);
+            LinkedList<RDSLFootPrint<RDSLNode<T>>> list = this.levels[level - 1];
+            return list.getLast();
         } else {
-            return this.level0.get(this.level0.size() - 1);
+            return this.level0.getLast();
         }
     }
     public T getLastDataNode() {
