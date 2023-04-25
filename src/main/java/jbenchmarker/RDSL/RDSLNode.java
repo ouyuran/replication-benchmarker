@@ -9,7 +9,41 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
     private RDSLNode[] references;
     private int[] distances;
 
-    private static final double p = 1.0 / 16;
+    private static final double p = 1.0 / 4;
+
+    private static final double[] pArray = {
+            p,
+            Math.pow(p, 2),
+            Math.pow(p, 3),
+            Math.pow(p, 4),
+            Math.pow(p, 5),
+            Math.pow(p, 6),
+            Math.pow(p, 7),
+            Math.pow(p, 8),
+            Math.pow(p, 9),
+            Math.pow(p, 10),
+            Math.pow(p, 11),
+            Math.pow(p, 12),
+            Math.pow(p, 13),
+            Math.pow(p, 14),
+            Math.pow(p, 15),
+            Math.pow(p, 16),
+            Math.pow(p, 17),
+            Math.pow(p, 18),
+            Math.pow(p, 19),
+            Math.pow(p, 20),
+            Math.pow(p, 21),
+            Math.pow(p, 22),
+            Math.pow(p, 23),
+            Math.pow(p, 24),
+            Math.pow(p, 25),
+            Math.pow(p, 26),
+            Math.pow(p, 27),
+            Math.pow(p, 28),
+            Math.pow(p, 29),
+            Math.pow(p, 30),
+            Math.pow(p, 31),
+    };
 
     public RDSLNode(T dataNode, int level) {
         this.dataNode = dataNode;
@@ -67,8 +101,9 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
     }
 
     private int getRandomLevel() {
+        double ran = Math.random();
         int level = 0;
-        while(Math.random() < p && level <= RDSLPath.MAX_LEVEL) {
+        while(ran < RDSLNode.pArray[level]) {
             level++;
         }
         return level;
@@ -114,7 +149,7 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
             outputs.add(s);
         }
         for(int i = outputs.size() - 1; i >=0; i--) {
-            //MyLogger.log(outputs.get(i));
+            System.out.println(outputs.get(i));
         }
     }
 
