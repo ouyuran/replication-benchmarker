@@ -8,8 +8,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 public class RDSLPath<T extends RDSLWalkable> {
-    private LinkedList<RDSLFootPrint<RDSLNode<T>>>[] levels;
-    private LinkedList<RDSLFootPrint<T>> level0;
+    private LinkedList<RDSLNode<T>>[] levels;
+    private LinkedList<T> level0;
     public static final int MAX_LEVEL = 32;
 
     private int totalLevels;
@@ -18,17 +18,17 @@ public class RDSLPath<T extends RDSLWalkable> {
         this.totalLevels = totalLevels;
         this.levels = new LinkedList[totalLevels];
         for(int i = 0; i < totalLevels; i++) {
-            levels[i] = new LinkedList<RDSLFootPrint<RDSLNode<T>>>();
+            levels[i] = new LinkedList<RDSLNode<T>>();
         }
-        level0 = new LinkedList<RDSLFootPrint<T>>();
+        level0 = new LinkedList<T>();
     }
 
-    public void add(RDSLFootPrint<RDSLNode<T>> footPrint) {
-        this.levels[footPrint.getLevel() - 1].addLast(footPrint);
+    public void add(RDSLNode<T> node, int level) {
+        this.levels[level - 1].addLast(node);
     }
 
-    public void addLevel0(RDSLFootPrint<T> footPrint) {
-        this.level0.addLast(footPrint);
+    public void addLevel0(T node) {
+        this.level0.addLast(node);
     }
 
     private int sumDistances(int level) {
@@ -50,15 +50,15 @@ public class RDSLPath<T extends RDSLWalkable> {
         if(level > this.totalLevels) return 0;
         if(level > 0) {
 //            int index = Math.min(this.totalLevels, level) - 1;
-            Iterator<RDSLFootPrint<RDSLNode<T>>> iterator = this.levels[level - 1].iterator();
+            Iterator<RDSLNode<T>> iterator = this.levels[level - 1].iterator();
             if(iterator.hasNext()) iterator.next(); // skip the first item
             while(iterator.hasNext()) {
-                totalDistance += iterator.next().getDistance();
+                totalDistance += iterator.next().getDistance(level);
             }
         } else {
-            Iterator<RDSLFootPrint<T>> iterator = this.level0.iterator();
+            Iterator<T> iterator = this.level0.iterator();
             while(iterator.hasNext()) {
-                totalDistance += iterator.next().getDistance();
+                totalDistance += iterator.next().getDistance(0);
             }
         }
         return totalDistance;
@@ -76,17 +76,11 @@ public class RDSLPath<T extends RDSLWalkable> {
         return total;
     }
 
-    public RDSLFootPrint getLastFootPrintOfLevel(int level) {
+    public RDSLNode getLastRDSLNodeOfLevel(int level) {
         if(level > this.totalLevels) return null;
-        if(level > 0) {
-            LinkedList<RDSLFootPrint<RDSLNode<T>>> list = this.levels[level - 1];
-            return list.getLast();
-        } else {
-            return this.level0.getLast();
-        }
+        return this.levels[level - 1].getLast();
     }
     public T getLastDataNode() {
-        RDSLFootPrint<T> f = getLastFootPrintOfLevel(0);
-        return f.getNode();
+        return this.level0.getLast();
     }
 }

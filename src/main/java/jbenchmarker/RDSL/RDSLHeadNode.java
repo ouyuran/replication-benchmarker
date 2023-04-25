@@ -66,8 +66,7 @@ public class RDSLHeadNode<T extends RDSLWalkable> extends RDSLNode{
         }
         //MyLogger.log(String.format("# %s, level %d", dataNode.getContentString(), level));
         for(int l = 1; l <= this.getHeadLevel(); l++) {
-            RDSLFootPrint leftFp = path.getLastFootPrintOfLevel(l);
-            RDSLNode left = leftFp != null ? (RDSLNode) leftFp.getNode() : this;
+            RDSLNode left = this.getLastFootPrintOfLevel(path, l);
             RDSLNode right = left.getRight(l);
             if(l <= level) {
                 left.setRight(l, rdslNode);
@@ -93,12 +92,16 @@ public class RDSLHeadNode<T extends RDSLWalkable> extends RDSLNode{
 
     public void handleUpdate(T dataNode, RDSLPath<T> path, int delta) {
         for(int l = 1; l <= this.getHeadLevel(); l++) {
-            RDSLFootPrint leftFp = path.getLastFootPrintOfLevel(l);
-            RDSLNode left = leftFp != null ? (RDSLNode) leftFp.getNode() : this;
+            RDSLNode left = this.getLastFootPrintOfLevel(path, l);
             RDSLNode right = left.getRight(l);
             if(right != null) {
                 right.updateDistance(l, delta);
             }
         }
+    }
+
+    private RDSLNode getLastFootPrintOfLevel(RDSLPath<T> path, int level) {
+        RDSLNode left = path.getLastRDSLNodeOfLevel(level);
+        return left != null ? left : this;
     }
 }

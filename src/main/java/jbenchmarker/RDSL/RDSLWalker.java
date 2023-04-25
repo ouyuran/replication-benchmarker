@@ -29,9 +29,9 @@ public class RDSLWalker<T extends RDSLWalkable> {
 
     private void addCurrentFootPrint() {
         if(this.currentLevel > 0) {
-            this.path.add(new RDSLFootPrint(this.currentNode, this.currentLevel));
+            this.path.add(this.currentNode, this.currentLevel);
         } else {
-            this.path.addLevel0(new RDSLFootPrint(this.dataNode, 0));
+            this.path.addLevel0(this.dataNode);
         }
     }
 

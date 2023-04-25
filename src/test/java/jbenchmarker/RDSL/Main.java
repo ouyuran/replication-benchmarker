@@ -42,7 +42,7 @@ public class Main {
         this.logootRDSL = (jbenchmarker.logootRDSL.LogootRDSLMerge) new LogootRDSLFactory().create(REPLICA_ID);
     }
 
-    private void runTestCase(MergeAlgorithm replica, TestDataElement[] testData) throws PreconditionException {
+    private long runTestCase(MergeAlgorithm replica, TestDataElement[] testData) throws PreconditionException {
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         long startTime = System.nanoTime();
         for(TestDataElement t : testData) {
@@ -52,6 +52,7 @@ public class Main {
         NumberFormat formatter = NumberFormat.getInstance();
 //        System.out.println(GraphLayout.parseInstance(replica.getDoc()).toFootprint());
         System.out.println("Execution time     : " + formatter.format(endTime - startTime) + " nanoseconds");
+        return endTime - startTime;
     }
 
     @Test
@@ -121,7 +122,13 @@ public class Main {
     @Test
     public void testRgaRDSLEndInsert100k() throws PreconditionException {
         TestDataElement[] testData = TestDataFile.getTestDataFromFile(TestDataFile.filePath + "end100000");
-        runTestCase(rgaRDSL, testData);
+//        runTestCase(rgaRDSL, testData);
+        long total = 0;
+        for(int i = 0; i< 100; i++) {
+            jbenchmarker.rgaRDSL.RgaRDSLMerge re = (jbenchmarker.rgaRDSL.RgaRDSLMerge) new RgaRDSLFactory().create(REPLICA_ID);
+            total += runTestCase(re, testData);
+        }
+        System.out.println(total);
     }
 
     @Test
