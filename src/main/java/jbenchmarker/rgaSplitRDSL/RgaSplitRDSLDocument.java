@@ -2,6 +2,7 @@ package jbenchmarker.rgaSplitRDSL;
 
 import Tools.MyLogger;
 import crdt.Operation;
+import jbenchmarker.RDSL.RDSLHeadNode;
 import jbenchmarker.RDSL.RDSLNode;
 import jbenchmarker.RDSL.RDSLPath;
 import jbenchmarker.RDSL.RDSLWalker;
@@ -13,11 +14,11 @@ import java.util.List;
 
 public class RgaSplitRDSLDocument<T> extends RgaSDocument<T> {
 
-    private RDSLNode<RgaSNode> rdslHead;
+    private RDSLHeadNode<RgaSNode> rdslHead;
 
     public RgaSplitRDSLDocument() {
         super();
-        this.rdslHead = new RDSLNode<>(this.getHead(), RDSLPath.MAX_LEVEL);
+        this.rdslHead = new RDSLHeadNode<>(this.getHead(), RDSLPath.MAX_LEVEL);
     }
 
     public void print() {

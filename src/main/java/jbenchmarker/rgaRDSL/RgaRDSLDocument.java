@@ -1,5 +1,6 @@
 package jbenchmarker.rgaRDSL;
 
+import jbenchmarker.RDSL.RDSLHeadNode;
 import jbenchmarker.RDSL.RDSLNode;
 import jbenchmarker.RDSL.RDSLPath;
 import jbenchmarker.RDSL.RDSLWalker;
@@ -11,11 +12,11 @@ import jbenchmarker.rga.RGAS4Vector;
 import java.util.NoSuchElementException;
 
 public class RgaRDSLDocument extends RGADocument {
-    private RDSLNode<RGANode> rdslHead;
+    private RDSLHeadNode<RGANode> rdslHead;
 
     public RgaRDSLDocument() {
         super();
-        this.rdslHead = new RDSLNode<>(this.getHead(), RDSLPath.MAX_LEVEL);
+        this.rdslHead = new RDSLHeadNode<>(this.getHead(), RDSLPath.MAX_LEVEL);
     }
 
     public RGANode getVisibleNode(int v, RDSLPath<RGANode> path) {

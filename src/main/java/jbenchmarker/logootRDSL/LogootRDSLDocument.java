@@ -21,6 +21,7 @@ package jbenchmarker.logootRDSL;
 import collect.RangeList;
 import crdt.Factory;
 import crdt.Operation;
+import jbenchmarker.RDSL.RDSLHeadNode;
 import jbenchmarker.RDSL.RDSLNode;
 import jbenchmarker.RDSL.RDSLPath;
 import jbenchmarker.RDSL.RDSLWalker;
@@ -45,7 +46,7 @@ public class LogootRDSLDocument<T> implements  Factory<LogootRDSLDocument<T>>, T
 //    final protected RangeList<T> document;
 //    private SinglyList<T> dataItems;
     private LogootRDSLNode<T> dataHead;
-    private RDSLNode<LogootRDSLNode<T>> rdslHead;
+    private RDSLHeadNode<LogootRDSLNode<T>> rdslHead;
     private List<Character> head;
     final protected LogootStrategy strategy;
 
@@ -58,7 +59,7 @@ public class LogootRDSLDocument<T> implements  Factory<LogootRDSLDocument<T>>, T
         myClock = 0;
         this.dataHead = new LogootRDSLNode<>(null, strategy.begin());
         this.dataHead.addAfter(new LogootRDSLNode<>(null, strategy.end()));
-        this.rdslHead = new RDSLNode<>(this.dataHead, RDSLPath.MAX_LEVEL);
+        this.rdslHead = new RDSLHeadNode<>(this.dataHead, RDSLPath.MAX_LEVEL);
     } 
     
     @Override
