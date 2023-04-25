@@ -7,7 +7,7 @@ import java.io.*;
 import static org.junit.Assert.assertEquals;
 
 public class TestDataFile {
-    public static String filePath = "/Users/ouyuran/tmp/";
+    public static String filePath = "/Users/yurano/tmp/";
 
     public static TestDataElement[] getTestDataFromFile(String fullPath) {
         try {
