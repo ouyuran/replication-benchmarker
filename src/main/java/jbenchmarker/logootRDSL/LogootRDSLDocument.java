@@ -60,8 +60,8 @@ public class LogootRDSLDocument<T> implements  Factory<LogootRDSLDocument<T>>, T
         this.dataHead = new LogootRDSLNode<>(null, strategy.begin());
         this.dataHead.addAfter(new LogootRDSLNode<>(null, strategy.end()));
         this.rdslHead = new RDSLHeadNode<>(this.dataHead, RDSLPath.MAX_LEVEL);
-    } 
-    
+    }
+
     @Override
     public String view() {
         StringBuilder s = new StringBuilder();

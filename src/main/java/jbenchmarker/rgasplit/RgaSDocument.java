@@ -108,7 +108,6 @@ public class RgaSDocument<T> implements Document {
 	}
 
 	public RgaSNode remoteSplit(RgaSNode node, int offsetAbs) {
-		System.out.println();
 		if (offsetAbs-node.getOffset()>0 && node.size()-offsetAbs+node.getOffset()>0){
 
 			List<T> a= null;

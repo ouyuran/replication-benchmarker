@@ -9,7 +9,7 @@ public class RDSLNode<T extends RDSLWalkable> implements RDSLWalkable{
     protected RDSLNode[] references;
     protected int[] distances;
 
-    protected static final double p = 1.0 / 4;
+    protected static final double p = 1.0 / 16;
 
     protected static final double[] pArray = {
             p,

@@ -75,6 +75,11 @@ public class TestDataFile {
     }
 
     @Test
+    public void generateRandomInsert1000() {
+        generateRandomInsert(1000);
+    }
+
+    @Test
     public void generateRandomInsert10k() {
         generateRandomInsert(10000);
     }
@@ -83,4 +88,13 @@ public class TestDataFile {
         generateRandomInsert(100000);
     }
 
+    @Test
+    public void generateRandomInsert50k() {
+        generateRandomInsert(50000);
+    }
+
+    @Test
+    public void generateRandomInsert80k() {
+        generateRandomInsert(80000);
+    }
 }
