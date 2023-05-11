@@ -8,6 +8,7 @@ import jbenchmarker.logootRDSL.LogootRDSLDocument;
 import jbenchmarker.logootRDSL.LogootRDSLMerge;
 import jbenchmarker.rga.RGAMerge;
 import jbenchmarker.rgasplit.RgaSMerge;
+import jbenchmarker.rgasplit.RgaSNode;
 import org.junit.Before;
 import org.junit.Test;
 import org.openjdk.jol.info.GraphLayout;
@@ -114,12 +115,24 @@ public class Main {
         long memorySpent = 0;
         if(measureMemory) {
             GraphLayout g = GraphLayout.parseInstance(replica.getDoc());
+            System.out.println(g.toFootprint());
             memorySpent = g.totalSize();
         }
+        System.out.println("Doc total length: " + replica.lookup().length());
         System.out.println(String.format("Time %s, Memory %s", formatter.format(timeSpent), formatter.format(memorySpent)));
         return new long[]{timeSpent, memorySpent};
     }
 
+    @Test
+    public void testG() {
+//        int[] i = new int[100];
+//        short[] s = new short[100];
+//        System.out.println(GraphLayout.parseInstance(i).toFootprint());
+//        System.out.println(GraphLayout.parseInstance(s).toFootprint());
+//        RDSLNode n1 = new RDSLNode(new RgaSNode<String>(), 6);
+//        System.out.println(GraphLayout.parseInstance(n1).toFootprint());
+        System.out.println(System.getProperty("java.vendor") + System.getProperty("java.version"));
+    }
     @Test
     public void testRgaEndInsert() throws PreconditionException {
         runTestCase("rga", "end100000");
@@ -155,10 +168,13 @@ public class Main {
 
     @Test
     public void all() throws PreconditionException {
+//        runTestCase("rga", "random1000", 1);
+//        runTestCase("rgaTree", "random1000", 1);
+        runTestCase("rgaRDSL", "random1000", 1);
 //        runTestCase("rgaSplit", "random100");
 //        runTestCase("rgaSplit", "random1000");
 //        runTestCase("rgaSplit", "random10000");
-//        runTestCase("rgaSplit", "random100000");
+//        runTestCase("rgaSplit", "random100000", 1);
 //        runTestCase("rgaSplitTree", "random100");
 //        runTestCase("rgaSplitTree", "random1000");
 //        runTestCase("rgaSplitTree", "random10000");
@@ -166,7 +182,7 @@ public class Main {
 //        runTestCase("rgaSplitRDSL", "random100");
 //        runTestCase("rgaSplitRDSL", "random1000");
 //        runTestCase("rgaSplitRDSL", "random10000");
-        runTestCase("rgaSplitRDSL", "random100000");
+//        runTestCase("rgaSplitRDSL", "random100000", 1);
 //        runTestCase("logoot", "random100");
 //        runTestCase("logoot", "random1000");
 //        runTestCase("logoot", "random10000");

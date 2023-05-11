@@ -115,9 +115,10 @@ public class RgaSplitRDSLMergeTest {
             //MyLogger.log(String.format("@@@@ insert %s at pos %d", s, pos));
             replica.applyLocal(SequenceOperation.insert(pos, s));
             replicaRGA.applyLocal(SequenceOperation.insert(pos, s));
-            replica.print();
+//            replica.print();
             assertEquals(replicaRGA.lookup(), replica.lookup());
         }
+        replica.print();
     }
 
     @Test
